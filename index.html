@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Shuttle Carbon Optimization - Visualization Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Campus Shuttle Carbon Optimization</h1>
+        <h2>MILP Model Impact Visualization</h2>
+    </div>
+
+    <div class="main-container">
+        <!-- Campus Map Container -->
+        <div class="map-container">
+            <svg id="campus-map" width="800" height="600">
+                <!-- Map elements will be dynamically created here -->
+            </svg>
+            
+            <!-- Map Legend -->
+            <div class="legend">
+                <h3>Routes</h3>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #007A33;"></div>
+                    <span>Route 1</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #FFC72C;"></div>
+                    <span>Route 2</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #006400;"></div>
+                    <span>Route 3</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-hotspot"></div>
+                    <span>Idle Hotspot</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <!-- Scenario Toggle -->
+            <div class="scenario-toggle">
+                <h3>Scenario</h3>
+                <button id="baseline-btn" class="scenario-btn active">Baseline Operations</button>
+                <button id="optimized-btn" class="scenario-btn">MILP Optimized</button>
+            </div>
+
+            <!-- Animation Controls -->
+            <div class="animation-controls">
+                <h3>Animation</h3>
+                <button id="play-btn" class="control-btn">▶ Play</button>
+                <button id="pause-btn" class="control-btn">⏸ Pause</button>
+                <button id="reset-btn" class="control-btn">⏮ Reset</button>
+                <button id="loop-btn" class="control-btn toggle">🔁 Loop</button>
+            </div>
+
+            <!-- Time Scrubber -->
+            <div class="time-scrubber">
+                <h3>Time Period: <span id="current-time">0</span/11</h3>
+                <input type="range" id="time-slider" min="0" max="11" value="0" step="1">
+                <div class="time-labels">
+                    <span>6:00 AM</span>
+                    <span>6:00 PM</span>
+                </div>
+            </div>
+
+            <!-- Live Metrics -->
+            <div class="metrics-panel">
+                <h3>Live Metrics</h3>
+                <div class="metric">
+                    <span class="metric-label">Total Emissions:</span>
+                    <span id="emissions-counter" class="metric-value">0.0 kg CO₂e</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Fuel Consumed:</span>
+                    <span id="fuel-counter" class="metric-value">0.0 L</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Idle Time:</span>
+                    <span id="idle-counter" class="metric-value">0 min</span>
+                </div>
+            </div>
+
+            <!-- Impact Summary (Hidden initially) -->
+            <div id="impact-summary" class="impact-summary hidden">
+                <h3>🌱 Daily Impact</h3>
+                <div class="savings">
+                    <div class="saving-item">
+                        <span class="saving-label">Emissions Saved:</span>
+                        <span id="emissions-saved" class="saving-value">0 kg CO₂e</span>
+                    </div>
+                    <div class="saving-item">
+                        <span class="saving-label">Annual Savings:</span>
+                        <span id="annual-savings" class="saving-value">0 kg CO₂e/year</span>
+                    </div>
+                    <div class="saving-item">
+                        <span class="saving-label">Equivalent to:</span>
+                        <span id="tree-equivalent" class="saving-value">0 trees planted</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Speed Control -->
+    <div class="speed-control">
+        <label>Animation Speed:</label>
+        <input type="range" id="speed-slider" min="0.5" max="3" value="1" step="0.5">
+        <span id="speed-value">1x</span>
+    </div>
+
+    <script src="campus-map.js"></script>
+    <script src="animation.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
