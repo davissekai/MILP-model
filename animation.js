@@ -166,7 +166,7 @@ class AnimationController {
         
         // Each period advances to the next segment
         // If we have more periods than segments, continue at the last segment
-        const idx = Math.min(period, segments.length - 1);
+        const idx = period % segments.length;
         return segments[idx]; // [from, to]
     }
 
@@ -309,33 +309,41 @@ class AnimationController {
 
     async play() {
         if (this.isPlaying) return;
-        
+
         this.isPlaying = true;
-        // Show route lines only while playing
-        this.campusMap.drawRouteSegments();
-        
-        while (this.isPlaying && this.currentTimePeriod <= this.maxTimePeriod) {
-            await this.animateTimePeriod(this.currentTimePeriod);
-            this.updateMetrics();
-            this.updateUI();
-            
-            // Wait for period duration
-            await new Promise(resolve => {
-                setTimeout(resolve, this.periodDuration / this.animationSpeed);
-            });
-            
-            this.currentTimePeriod++;
-            
-            // Check if we've reached the end
+        this.campusMap.drawRouteSegments(); // Show route lines
+
+        const nextFrame = async () => {
+            if (!this.isPlaying) {
+                this.campusMap.clearRouteSegments(); // Hide routes when paused
+                return;
+            }
+
             if (this.currentTimePeriod > this.maxTimePeriod) {
                 if (this.isLooping) {
                     this.resetAnimation();
+                    // Automatically start playing again
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    this.play();
                 } else {
                     this.pause();
                     this.showImpactSummary();
                 }
+                return;
             }
-        }
+
+            await this.animateTimePeriod(this.currentTimePeriod);
+            this.updateMetrics();
+            this.updateUI();
+
+            this.currentTimePeriod++;
+
+            // Schedule the next frame
+            this.animationInterval = setTimeout(nextFrame, this.periodDuration / this.animationSpeed);
+        };
+
+        // Start the animation loop
+        nextFrame();
     }
 
     pause() {
